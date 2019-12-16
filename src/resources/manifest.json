@@ -1,0 +1,22 @@
+{
+  "name": "Happy Cake 2!",
+  "short_name": "Happy Cake 2!",
+  "description": "Oh man mini cakes are the sh*t rn",
+  "start_url": "../index.html",
+  "background_color": "#B0BBC4",
+  "theme_color": "#B0BBC4",
+  "display": "standalone",
+  "orientation": "natural",
+  "icons": [
+    {
+      "src": "../images/icons/app/icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "../images/icons/app/icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
