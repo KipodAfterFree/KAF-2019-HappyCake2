@@ -20,6 +20,7 @@ api("minicake", function ($action, $parameters) {
     if ($action === "bake") {
         if (isset($parameters->name)) {
             if (!file_exists(BOXES_DIRECTORY . "/" . authenticate_hash($parameters->name))) {
+                mkdir(BOXES_DIRECTORY . "/" . authenticate_hash($parameters->name));
                 foreach (BOX_TYPES as $type) {
                     file_put_contents(BOXES_DIRECTORY . "/" . authenticate_hash($parameters->name) . "/" . $type, create_box("Default", 1, authenticate_hash("Default")));
                 }
@@ -54,3 +55,5 @@ api("minicake", function ($action, $parameters) {
         return [false, "Missing parameters"];
     }
 }, true);
+
+echo json_encode($result);

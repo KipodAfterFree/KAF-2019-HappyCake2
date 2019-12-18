@@ -1,17 +1,74 @@
-const MASTER = "chocolatechips";
+const MASTER_NAME = "chocolatechip";
+const MASTER_SECRET = "chocolatechips";
+
+const TYPES = [
+    "Abernethy",
+    "Biscotti",
+    "Coyotas",
+    "Custardcream",
+    "Empirebiscuit",
+    "Gingerbread",
+    "Nicebiscuit",
+    "Sandwichcookie",
+    "Stroopwafel",
+    // "Flag"
+];
 
 function load() {
-    if (cookie_exists(MASTER)){
-
-    }else{
+    if (cookie_exists(MASTER_NAME) && cookie_exists(MASTER_SECRET)) {
+        page("home");
+        loadBoxes();
+    } else {
         page("auth");
     }
 }
 
-function bakeUser(){
-    api("scripts/backend/minicake/minicake.php", "minicake", "bake", {name: get("username").value}, (success, result)=>{
-
+function bakeUser() {
+    api("scripts/backend/minicake/minicake.php", "minicake", "bake", {name: get("username").value}, (success, result) => {
+        if (success) {
+            cookie_push(MASTER_NAME, get("username").value);
+            cookie_push(MASTER_SECRET, result);
+            load();
+        } else {
+            popup(result);
+        }
     });
+}
+
+function loadBoxes() {
+    clear("list");
+    for (let t in TYPES) {
+        api("scripts/backend/minicake/minicake.php", "minicake", "fetch", {
+            name: cookie_pull(MASTER_NAME),
+            secret: cookie_pull(MASTER_SECRET),
+            type: TYPES[t]
+        }, (success, result) => {
+            let box = make("div");
+            let box_text = make("p");
+            let box_add = make("button");
+            input(box);
+            row(box);
+            box_text.innerText = result.name + " has " + result.amount + " " + TYPES[t] + " mini cakes";
+            box_add.innerText = "Add 1 mini cake";
+            box_add.onclick = function () {
+                api("scripts/backend/minicake/minicake.php", "minicake", "amount", {
+                    name: cookie_pull(MASTER_NAME),
+                    secret: cookie_pull(MASTER_SECRET),
+                    type: t,
+                    amount: result.amount + 1
+                }, (success, result) => {
+                    if (success) {
+                        load();
+                    } else {
+                        popup(result);
+                    }
+                });
+            };
+            box.appendChild(box_text);
+            box.appendChild(box_add);
+            get("list").appendChild(box);
+        });
+    }
 }
 
 function cookie_pull(name) {
