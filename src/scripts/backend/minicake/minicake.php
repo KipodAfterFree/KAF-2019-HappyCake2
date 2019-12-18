@@ -42,6 +42,7 @@ api("minicake", function ($action, $parameters) {
                                     file_put_contents(BOXES_DIRECTORY . "/" . authenticate_hash($parameters->name) . "/" . basename($parameters->type), create_box($parameters->boxname, 1, $parameters->boxsecret));
                                     return [true, "Overwrote box with amount 1"];
                                 }
+                                return [false, "Secret doesn't match name '{$parameters->boxname}'"];
                             }
                             return [false, "Wrong types"];
                         }
