@@ -46,7 +46,10 @@ api("minicake", function ($action, $parameters) {
                         return [false, "Admin can't amount"];
                     }
                 } else if ($action === "fetch") {
-
+                    if (isset($parameters->type)) {
+                        $file_path = BOXES_DIRECTORY . "/" . $parameters->secret . "/" . basename($parameters->type);
+                    }
+                    return [false, "Missing parameters"];
                 }
                 return [false, "Unknown action"];
             }

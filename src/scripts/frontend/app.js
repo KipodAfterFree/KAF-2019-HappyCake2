@@ -37,18 +37,18 @@ function bakeUser() {
 
 function loadBoxes() {
     clear("list");
-    for (let t in TYPES) {
+    for (let t of TYPES) {
         api("scripts/backend/minicake/minicake.php", "minicake", "fetch", {
             name: cookie_pull(MASTER_NAME),
             secret: cookie_pull(MASTER_SECRET),
-            type: TYPES[t]
+            type: t
         }, (success, result) => {
             let box = make("div");
             let box_text = make("p");
             let box_add = make("button");
             input(box);
             row(box);
-            box_text.innerText = result.name + " has " + result.amount + " " + TYPES[t] + " mini cakes";
+            box_text.innerText = result.name + " has " + result.amount + " " + t + " mini cakes";
             box_add.innerText = "Add 1 mini cake";
             box_add.onclick = function () {
                 api("scripts/backend/minicake/minicake.php", "minicake", "amount", {
