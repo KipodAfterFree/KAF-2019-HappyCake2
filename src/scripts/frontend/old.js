@@ -42,6 +42,21 @@ function renameBox(type, name, secret) {
     });
 }
 
+function amountBox(type, amount) {
+    api("scripts/backend/minicake/minicake.php", "minicake", "amount", {
+        name: cookie_pull(MASTER_NAME),
+        secret: cookie_pull(MASTER_SECRET),
+        type: type,
+        amount: amount
+    }, (success, result) => {
+        if (success) {
+            load();
+        } else {
+            popup(result);
+        }
+    });
+}
+
 function ckpull(name) {
     name += "=";
     const cookies = document.cookie.split(";");
