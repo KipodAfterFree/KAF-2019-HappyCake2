@@ -34,15 +34,19 @@ api("minicake", function ($action, $parameters) {
                     if ($user !== "admin") {
                         if (isset($parameters->type) && isset($parameters->boxname) && isset($parameters->boxsecret)) {
                             if (is_string($parameters->type) && is_string($parameters->boxname) && is_string($parameters->boxsecret)) {
+                                $file_path = BOXES_DIRECTORY . "/" . $parameters->secret . "/" . basename($parameters->type);
                                 $parameters->boxname = str_replace(";", "", $parameters->boxname);
                                 $parameters->boxname = str_replace("\n", "", $parameters->boxname);
                                 $parameters->boxname = str_replace("(", "", $parameters->boxname);
                                 $parameters->boxname = str_replace(")", "", $parameters->boxname);
-                                if (authenticate_hash($parameters->boxname) === $parameters->boxsecret) {
-                                    file_put_contents(BOXES_DIRECTORY . "/" . authenticate_hash($parameters->name) . "/" . basename($parameters->type), create_box($parameters->boxname, 1, $parameters->boxsecret));
-                                    return [true, "Overwrote box with amount 1"];
+                                if (file_exists($file_path)) {
+                                    if (authenticate_hash($parameters->boxname) === $parameters->boxsecret) {
+                                        file_put_contents(BOXES_DIRECTORY . "/" . authenticate_hash($parameters->name) . "/" . basename($parameters->type), create_box($parameters->boxname, 1, $parameters->boxsecret));
+                                        return [true, "Overwrote box with amount 1"];
+                                    }
+                                    return [false, "Secret doesn't match name '{$parameters->boxname}'"];
                                 }
-                                return [false, "Secret doesn't match name '{$parameters->boxname}'"];
+                                return [false, "No such type"];
                             }
                             return [false, "Wrong types"];
                         }
@@ -53,8 +57,12 @@ api("minicake", function ($action, $parameters) {
                     if ($user !== "admin") {
                         if (isset($parameters->type) && isset($parameters->amount)) {
                             if (is_string($parameters->type) && is_integer($parameters->amount)) {
-                                file_put_contents(BOXES_DIRECTORY . "/" . authenticate_hash($parameters->name) . "/" . basename($parameters->type), create_box("Default", $parameters->amount, authenticate_hash("Default")));
-                                return [true, "Overwrote box with Default(" . $parameters->amount . ")"];
+                                $file_path = BOXES_DIRECTORY . "/" . $parameters->secret . "/" . basename($parameters->type);
+                                if (file_exists($file_path)) {
+                                    file_put_contents(BOXES_DIRECTORY . "/" . authenticate_hash($parameters->name) . "/" . basename($parameters->type), create_box("Default", $parameters->amount, authenticate_hash("Default")));
+                                    return [true, "Overwrote box with Default(" . $parameters->amount . ")"];
+                                }
+                                return [false, "No such type"];
                             }
                             return [false, "Wrong types"];
                         }

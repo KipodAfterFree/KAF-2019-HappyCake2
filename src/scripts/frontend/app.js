@@ -49,24 +49,28 @@ function loadBoxes() {
             box_text.innerText = t + " (" + result.name + ") has " + result.amount + " mini cakes";
             box_add.innerText = "Add 1";
             box_add.onclick = function () {
-                api("scripts/backend/minicake/minicake.php", "minicake", "amount", {
-                    name: cookie_pull(MASTER_NAME),
-                    secret: cookie_pull(MASTER_SECRET),
-                    type: t,
-                    amount: result.amount + 1
-                }, (success, result) => {
-                    if (success) {
-                        load();
-                    } else {
-                        popup(result);
-                    }
-                });
+                amountBox(t, result.amount + 1);
             };
             box.appendChild(box_text);
             box.appendChild(box_add);
             get("list").appendChild(box);
         });
     }
+}
+
+function amountBox(type, amount) {
+    api("scripts/backend/minicake/minicake.php", "minicake", "amount", {
+        name: cookie_pull(MASTER_NAME),
+        secret: cookie_pull(MASTER_SECRET),
+        type: type,
+        amount: amount
+    }, (success, result) => {
+        if (success) {
+            load();
+        } else {
+            popup(result);
+        }
+    });
 }
 
 function cookie_pull(name) {
