@@ -18,3 +18,10 @@ function authenticate_hash($name)
 {
     return hash_hmac(HASHING_ALGO, $name, SERVER_SIGNATURE);
 }
+
+function create_box($name, $amount, $hash)
+{
+    $amount = intval($amount);
+    $contents = "<?php\nconst BOX_NAME = \"$name\";\nconst BOX_AMOUNT = \"$amount\";const BOX_NAME_HASH = \"$hash\";";
+    return $contents;
+}
