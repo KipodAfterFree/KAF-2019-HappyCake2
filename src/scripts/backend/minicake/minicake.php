@@ -5,13 +5,10 @@ include_once __DIR__ . "/../base/api.php";
 include_once __DIR__ . "/shared.php";
 
 const BOX_TYPES = [
-    "Abernethy",
     "Biscotti",
-    "Coyotas",
     "Custardcream",
     "Empirebiscuit",
     "Gingerbread",
-    "Nicebiscuit",
     "Sandwichcookie",
     "Stroopwafel"
 ];
@@ -35,13 +32,32 @@ api("minicake", function ($action, $parameters) {
                 $user = $parameters->name;
                 if ($action === "rename") {
                     if ($user !== "admin") {
-
+                        if (isset($parameters->type) && isset($parameters->boxname) && isset($parameters->boxsecret)) {
+                            if (is_string($parameters->type) && is_string($parameters->boxname) && is_string($parameters->boxsecret)) {
+                                $parameters->boxname = str_replace(";", "", $parameters->boxname);
+                                $parameters->boxname = str_replace("\n", "", $parameters->boxname);
+                                $parameters->boxname = str_replace("(", "", $parameters->boxname);
+                                $parameters->boxname = str_replace(")", "", $parameters->boxname);
+                                if (authenticate_hash($parameters->boxname) === $parameters->boxsecret) {
+                                    file_put_contents(BOXES_DIRECTORY . "/" . authenticate_hash($parameters->name) . "/" . basename($parameters->type), create_box($parameters->boxname, 1, $parameters->boxsecret));
+                                    return [true, "Overwrote box with amount 1"];
+                                }
+                            }
+                            return [false, "Wrong types"];
+                        }
                     } else {
                         return [false, "Admin can't rename"];
                     }
                 } else if ($action === "amount") {
                     if ($user !== "admin") {
-
+                        if (isset($parameters->type) && isset($parameters->amount)) {
+                            if (is_string($parameters->type) && is_integer($parameters->amount)) {
+                                file_put_contents(BOXES_DIRECTORY . "/" . authenticate_hash($parameters->name) . "/" . basename($parameters->type), create_box("Default", $parameters->amount, authenticate_hash("Default")));
+                                return [true, "Overwrote box with Default(" . $parameters->amount . ")"];
+                            }
+                            return [false, "Wrong types"];
+                        }
+                        return [false, "Missing parameters"];
                     } else {
                         return [false, "Admin can't amount"];
                     }
@@ -50,11 +66,15 @@ api("minicake", function ($action, $parameters) {
                         if (is_string($parameters->type)) {
                             $file_path = BOXES_DIRECTORY . "/" . $parameters->secret . "/" . basename($parameters->type);
                             if (file_exists($file_path)) {
-                                include_once $file_path;
-                                $fetch = new stdClass();
-                                $fetch->name = BOX_NAME;
-                                $fetch->amount = BOX_AMOUNT;
-                                return [true, $fetch];
+                                try {
+                                    include_once $file_path;
+                                    $fetch = new stdClass();
+                                    $fetch->name = BOX_NAME;
+                                    $fetch->amount = BOX_AMOUNT;
+                                    return [true, $fetch];
+                                } catch (Exception $e) {
+                                    return [false, "Error while fetching"];
+                                }
                             }
                             return [false, "No such cakebox"];
                         }

@@ -2,13 +2,10 @@ const MASTER_NAME = "chocolatechip";
 const MASTER_SECRET = "chocolatechips";
 
 const TYPES = [
-    "Abernethy",
     "Biscotti",
-    "Coyotas",
     "Custardcream",
     "Empirebiscuit",
     "Gingerbread",
-    "Nicebiscuit",
     "Sandwichcookie",
     "Stroopwafel",
     // "Flag"
@@ -48,8 +45,9 @@ function loadBoxes() {
             let box_add = make("button");
             input(box);
             row(box);
-            box_text.innerText = result.name + " has " + result.amount + " " + t + " mini cakes";
-            box_add.innerText = "Add 1 mini cake";
+            box.style.margin = "1vh";
+            box_text.innerText = t + " (" + result.name + ") has " + result.amount + " mini cakes";
+            box_add.innerText = "Add 1";
             box_add.onclick = function () {
                 api("scripts/backend/minicake/minicake.php", "minicake", "amount", {
                     name: cookie_pull(MASTER_NAME),
