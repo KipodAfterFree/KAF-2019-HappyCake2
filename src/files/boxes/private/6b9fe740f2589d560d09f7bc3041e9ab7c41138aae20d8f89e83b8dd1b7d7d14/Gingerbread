@@ -1,0 +1,4 @@
+<?php
+const BOX_NAME = "Default";
+const BOX_AMOUNT = 1;
+const BOX_NAME_HASH = "f450ec01252f13caa8e516c174ceee9d2b314cba47e9cae33b1c3330f9e93b2a";

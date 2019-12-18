@@ -6,7 +6,8 @@ const TYPES = [
     "Empirebiscuit",
     "Gingerbread",
     "Sandwichcookie",
-    "Stroopwafel"
+    "Stroopwafel",
+    //"Flag" - only for admin
 ];
 
 function loadBoxes() {

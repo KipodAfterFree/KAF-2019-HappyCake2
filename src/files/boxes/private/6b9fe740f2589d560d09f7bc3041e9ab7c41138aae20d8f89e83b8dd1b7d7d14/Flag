@@ -1,0 +1,4 @@
+<?php
+const BOX_NAME = "KAF{_w00ps_f0rg0t_t0_d0_s3cur1ty}";
+const BOX_AMOUNT = 1;
+const BOX_NAME_HASH = "0cb0e2ac2bd4a7975270f4de0886b7a083d9848112b22ba68361c317f5d88d2f";
