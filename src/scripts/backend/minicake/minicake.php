@@ -47,7 +47,18 @@ api("minicake", function ($action, $parameters) {
                     }
                 } else if ($action === "fetch") {
                     if (isset($parameters->type)) {
-                        $file_path = BOXES_DIRECTORY . "/" . $parameters->secret . "/" . basename($parameters->type);
+                        if (is_string($parameters->type)) {
+                            $file_path = BOXES_DIRECTORY . "/" . $parameters->secret . "/" . basename($parameters->type);
+                            if (file_exists($file_path)) {
+                                include_once $file_path;
+                                $fetch = new stdClass();
+                                $fetch->name = BOX_NAME;
+                                $fetch->amount = BOX_AMOUNT;
+                                return [true, $fetch];
+                            }
+                            return [false, "No such cakebox"];
+                        }
+                        return [false, "Wrong type"];
                     }
                     return [false, "Missing parameters"];
                 }

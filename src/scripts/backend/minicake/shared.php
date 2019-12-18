@@ -22,6 +22,6 @@ function authenticate_hash($name)
 function create_box($name, $amount, $hash)
 {
     $amount = intval($amount);
-    $contents = "<?php\nconst BOX_NAME = \"$name\";\nconst BOX_AMOUNT = \"$amount\";const BOX_NAME_HASH = \"$hash\";";
+    $contents = "<?php\nconst BOX_NAME = \"$name\";\nconst BOX_AMOUNT = \"$amount\";\nconst BOX_NAME_HASH = \"$hash\";";
     return $contents;
 }
